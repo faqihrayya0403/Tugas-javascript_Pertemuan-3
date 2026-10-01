@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Manajemen Produk Toko</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f6f8;
+            margin: 0;
+            padding: 30px;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: auto;
+            background-color: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 25px;
+        }
+
+        .btn-tambah {
+            background-color: #28a745;
+            color: white;
+            border: none;
+            padding: 10px 18px;
+            border-radius: 6px;
+            cursor: pointer;
+            margin-bottom: 20px;
+        }
+
+        .btn-tambah:hover {
+            background-color: #218838;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th {
+            background-color: #343a40;
+            color: white;
+            padding: 12px;
+        }
+
+        td {
+            padding: 12px;
+            text-align: center;
+            border-bottom: 1px solid #ddd;
+        }
+
+        tr:hover {
+            background-color: #f1f1f1;
+        }
+
+        .btn-hapus {
+            background-color: #dc3545;
+            color: white;
+            border: none;
+            padding: 7px 12px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .btn-hapus:hover {
+            background-color: #c82333;
+        }
+
+        .kosong {
+            text-align: center;
+            padding: 20px;
+            color: #777;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+
+        <h1>Manajemen Produk Toko</h1>
+
+        <button class="btn-tambah" onclick="tambahProduk()">
+            + Tambah Produk
+        </button>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Nama Produk</th>
+                    <th>Harga</th>
+                    <th>Stok</th>
+                    <th>Aksi</th>
+                </tr>
+            </thead>
+
+            <tbody id="daftarProduk">
+            </tbody>
+        </table>
+
+    </div>
+
+
+    <script>
+
+        // Array produk toko
+        let produkToko = [
+            {
+                id: 1,
+                nama: "Laptop",
+                harga: 7000000,
+                stok: 5
+            },
+            {
+                id: 2,
+                nama: "Mouse",
+                harga: 200000,
+                stok: 10
+            },
+            {
+                id: 3,
+                nama: "Keyboard",
+                harga: 350000,
+                stok: 7
+            }
+        ];
+
+
+        // Fungsi menambahkan produk
+        function tambahProduk() {
+
+            let nama = prompt("Masukkan nama produk:");
+            let harga = prompt("Masukkan harga produk:");
+            let stok = prompt("Masukkan stok produk:");
+
+            if (nama === null || harga === null || stok === null) {
+                return;
+            }
+
+            // Membuat ID baru
+            let idBaru = 1;
+
+            if (produkToko.length > 0) {
+                idBaru = Math.max(
+                    ...produkToko.map(produk => produk.id)
+                ) + 1;
+            }
+
+            let produkBaru = {
+                id: idBaru,
+                nama: nama,
+                harga: Number(harga),
+                stok: Number(stok)
+            };
+
+            produkToko.push(produkBaru);
+
+            tampilkanProduk();
+        }
+
+
+        // Fungsi menghapus produk berdasarkan ID
+        function hapusProduk(id) {
+
+            let konfirmasi = confirm(
+                "Apakah Anda yakin ingin menghapus produk ini?"
+            );
+
+            if (konfirmasi) {
+
+                produkToko = produkToko.filter(function(produk) {
+                    return produk.id !== id;
+                });
+
+                tampilkanProduk();
+            }
+        }
+
+
+        // Fungsi menampilkan produk
+        function tampilkanProduk() {
+
+            let daftar = document.getElementById("daftarProduk");
+
+            daftar.innerHTML = "";
+
+            if (produkToko.length === 0) {
+
+                daftar.innerHTML = `
+                    <tr>
+                        <td colspan="5" class="kosong">
+                            Tidak ada produk
+                        </td>
+                    </tr>
+                `;
+
+                return;
+            }
+
+            produkToko.forEach(function(produk) {
+
+                daftar.innerHTML += `
+                    <tr>
+                        <td>${produk.id}</td>
+                        <td>${produk.nama}</td>
+                        <td>Rp ${produk.harga.toLocaleString("id-ID")}</td>
+                        <td>${produk.stok}</td>
+                        <td>
+                            <button
+                                class="btn-hapus"
+                                onclick="hapusProduk(${produk.id})">
+                                Hapus
+                            </button>
+                        </td>
+                    </tr>
+                `;
+
+            });
+        }
+
+
+        // Menampilkan produk saat halaman dibuka
+        tampilkanProduk();
+
+    </script>
+
+</body>
+</html>
